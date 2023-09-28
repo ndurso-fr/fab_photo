@@ -25,22 +25,52 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 10; $i++) {
-            $user = (new User())
-                ->setFirstname($this->faker->firstName())
-                ->setLastname($this->faker->lastName())
-                ->setPseudo($this->faker->name())
-                ->setEmail($this->faker->email())
-                ->setRoles(['ROLE_USER']);
+        /* Users */
+        $password = '123456';
+        // known users
+        $this->createUser($manager, ['ROLE_USER', 'ROLE_ADMIN'], $password,
+            'Nathalie', 'D\'urso',
+            'ndurso', 'nathaliedurso@gmx.fr');
 
-            $hashPassword = $this->passwordHasher->hashPassword(
-                $user,
-                '123456'
-            );
-            $user->setPassword($hashPassword);
-            $manager->persist($user);
+        // faker user
+        for ($i = 0; $i < 10; $i++) {
+            $this->createUser($manager, ['ROLE_USER'], $password);
         }
 
         $manager->flush();
+    }
+
+
+    /**
+     * @param ObjectManager $manager
+     * @param array $roles
+     * @param string $password
+     * @param string|null $fistName
+     * @param string|null $lastName
+     * @param string|null $pseudo
+     * @param string|null $email
+     * @return void
+     */
+    private function createUser(ObjectManager $manager,
+                                array $roles,
+                                string $password,
+                                string $fistName=null,
+                                string $lastName=null,
+                                string $pseudo=null,
+                                string $email=null,
+    ):void {
+        $user = (new User())
+            ->setFirstname($fistName ?? $this->faker->firstName())
+            ->setLastname($lastName ?? $this->faker->lastName())
+            ->setPseudo($pseudo ?? $this->faker->name())
+            ->setEmail($email ?? $this->faker->email())
+            ->setRoles($roles);
+
+        $hashPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $password
+        );
+        $user->setPassword($hashPassword);
+        $manager->persist($user);
     }
 }
