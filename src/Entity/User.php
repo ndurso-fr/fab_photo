@@ -19,46 +19,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(
+        message: 'The email  {{ value }} is not be blank.',
+    )]
     #[Assert\Email(
         message: 'The email {{ value }} is not a valid email.',
     )]
     private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
-    #[Assert\NotNull]
+    #[Assert\NotNull(
+        message: 'Role {{ value }} is not be null.',
+    )]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
-    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $password = null;
 
-    private ?string $plainPassword = null;
+    #[Assert\NotBlank(
+        message: 'The password value is not be blank.',
+    )]
+    #[Assert\Length(min: 6, max: 20, minMessage: 'Your password should be at least {{ limit }} characters.')]
+    private string $plainPassword;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(
+        message: 'The firstname  {{ value }} is not be blank.',
+    )]
     #[Assert\Length(min: 2, max: 50)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(
+        message: 'The lastname  {{ value }} is not be blank.',
+    )]
     #[Assert\Length(min: 2, max: 50)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]    #[Assert\NotBlank(
+        message: 'The pseudo  {{ value }} is not be blank.',
+    )]
     #[Assert\Length(min: 2, max: 50)]
     private ?string $pseudo = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->roles[] = 'ROLE_USER';
     }
 
     public function getId(): ?int
@@ -93,11 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return array_unique($this->roles);
     }
 
     public function setRoles(array $roles): static
@@ -190,6 +203,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
