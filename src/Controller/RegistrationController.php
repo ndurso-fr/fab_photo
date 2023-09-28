@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -14,19 +15,25 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
-
-    public function __construct(EmailVerifier $emailVerifier)
+    private VerifyEmailHelperInterface $verifyEmailHelper;
+    private EntityManagerInterface $entityManager;
+    public function __construct(EmailVerifier $emailVerifier,
+                                VerifyEmailHelperInterface $verifyEmailHelper,
+                                EntityManagerInterface $entityManager)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->verifyEmailHelper = $verifyEmailHelper;
+        $this->entityManager = $entityManager;
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -41,8 +48,8 @@ class RegistrationController extends AbstractController
                 )
             );
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
@@ -63,13 +70,29 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, UserRepository $userRepository,
+                                    TranslatorInterface $translator): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $id = $request->query->get('id'); // retrieve the user id from the url
+        // Verify the user id exists and is not null
+        if (null === $id) {
+            return $this->redirectToRoute('app_home');
+        }
+        $user = $userRepository->find($id);
+
+        // Ensure the user exists in persistence
+        if (null === $user) {
+            return $this->redirectToRoute('app_home');
+        }
+
+//        $user->setIsVerified(true);
+//        $this->entityManager->persist($user);
+//        $this->entityManager->flush();
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            //$this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
@@ -79,6 +102,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');// de toute façon le security firewall fait aller sur login
     }
 }

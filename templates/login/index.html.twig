@@ -4,6 +4,9 @@
 
 {% block body %}
     <div class="container mt-2 mb-2">
+        {% for flash_success in app.flashes('success') %}
+            <div class="alert alert-info" role="alert">{{ flash_success }}</div>
+        {% endfor %}
         <h2>Log in</h2>
         <section class="mt-2">
             {% if error %}
