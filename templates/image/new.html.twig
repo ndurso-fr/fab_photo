@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Image{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+        <div class="pt-4 pb-4">
+            <a href="{{ path('app_image_index') }}" class="btn btn-secondary mr-2 float-end">back to list</a>
+            <h3>Upload a new image</h3>
+        </div>
+        {{ include('image/_form.html.twig') }}
+
+    </div>
+
+{% endblock %}

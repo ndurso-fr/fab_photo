@@ -1,9 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Images{% endblock %}
+{% block title %}Image index{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>Gestion d'images</h1>
-    </div>
+    <h1>Image index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Image</th>{# ImageName #}
+                <th>ImageSize</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for image in images %}
+            <tr>
+                <td>{{ image.id }}</td>
+                <td>
+{#                    <img src="/images/upload/{{ image.imageName }}" alt="{{ image.imageName }}" class="card-img-top"#}
+                      <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="{{ image.imageName }}" class="card-img-top"
+                    style="width: 10%; height: auto;">
+                </td>
+                <td>{{ image.imageSize }}</td>
+                <td>{{ image.created ? image.created|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ image.updated ? image.updated|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_image_show', {'id': image.id}) }}">show</a>
+                    <a href="{{ path('app_image_edit', {'id': image.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_image_new') }}">Create new</a>
 {% endblock %}
