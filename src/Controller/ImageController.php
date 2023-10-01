@@ -6,14 +6,26 @@ use App\Entity\Image;
 use App\Form\ImageType;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
+use League\Glide\Responses\SymfonyResponseFactory;
+use League\Glide\Server;
+use League\Glide\Signatures\SignatureException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/image')]
 class ImageController extends AbstractController
 {
+    public function __construct(private readonly FilesystemOperator $photoStorage)
+    {
+    }
+
     #[Route('/', name: 'app_image_index', methods: ['GET'])]
     public function index(ImageRepository $imageRepository): Response
     {
@@ -77,5 +89,62 @@ class ImageController extends AbstractController
         }
 
         return $this->redirectToRoute('app_image_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/download/{path}/{name}/{size}', name: 'download_doc', methods: ['GET'])]
+    public function download(string $path, string $name, string $size): StreamedResponse
+    {
+
+        try {
+            $stream = $this->photoStorage->readStream($path);
+
+            return new StreamedResponse(function () use ($stream) {
+                fpassthru($stream);
+                exit();
+            }, 200, [
+                'Content-Transfer-Encoding', 'binary',
+                'Content-Type' => $this->photoStorage->mimeType($path),
+                'Content-Disposition' => 'attachment; filename='.$name,
+                'Content-Length' => $size,
+            ]);
+        } catch (FilesystemException) {
+            throw new NotFoundHttpException("Ce fichier n'existe pas");
+        }
+    }
+    #[Route('/getImage/{id}', name: 'app_get_image', methods: ['GET'])]
+    public function getImageFromFlysystem(Request $request, Image $image): Response
+    {
+        try {
+            $response = new Response($this->photoStorage->read($image->getImageName()));
+            $response->headers->set('Content-Type', $this->photoStorage->mimeType($image->getImageName()));
+            $response->setEtag(md5($response->getContent()));
+            $response->setSharedMaxAge(31536000);
+            $response->setPublic();
+            $response->isNotModified($request);
+
+            return $response;
+        } catch (FilesystemException) {
+            throw new NotFoundHttpException("Ce fichier n'existe pas");
+        }
+    }
+
+    #[Route('/glideImage/{id}', name: 'app_glide_image', methods: ['GET'])]
+    public function glideImage(Request $request, Image $image, Server $glide, string $glideSignKey=""): Response
+    {
+        // Glide fait comme on a fait dans le controller getImageFromFlysystem
+        // Grâce à la configuration de son service, on lui dit d'utiliser flysystem pour la retrouver.
+        // voir : ~/fab_photo/config/services.yaml
+        try {
+            $parameters = $request->query->all();
+            //SignatureFactory::create($glideSignKey)->validateRequest('/getImage/' . $_image->getImageName(), $parameters);
+
+            $glide->setResponseFactory(new SymfonyResponseFactory($request));
+
+            return $glide->getImageResponse($image->getImageName(), ['w' => 50, 'h' => 50]);
+        } catch (SignatureException) {
+            throw new AccessDeniedException($image->getImageName());
+        } catch (FilesystemException) {
+            throw new NotFoundHttpException("Ce fichier n'existe pas");
+        }
     }
 }

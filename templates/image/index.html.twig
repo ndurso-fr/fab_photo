@@ -9,10 +9,13 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Image</th>{# ImageName #}
+                <th>Image</th>
                 <th>ImageSize</th>
                 <th>Created</th>
                 <th>Updated</th>
+                <th>MineType</th>
+                <th>OriginalName</th>
+                <th>Dimensions</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,13 +24,20 @@
             <tr>
                 <td>{{ image.id }}</td>
                 <td>
-{#                    <img src="/images/upload/{{ image.imageName }}" alt="{{ image.imageName }}" class="card-img-top"#}
-                      <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="{{ image.imageName }}" class="card-img-top"
-                    style="width: 10%; height: auto;">
+                    {#                    <img src="/images/upload/{{ _image.imageName }}" alt="{{ _image.imageName }}" class="card-img-top"#}
+                    {#                      <img src="{{ vich_uploader_asset(_image, 'imageFile') }}" alt="{{ _image.imageName }}" class="card-img-top"#}
+                    {#                      style="width: 10%; height: auto;">#}
+                    {#                    <img src="{{ path('app_get_image', {'id': _image.id}) }}" alt="{{ _image.imageName }}" class="card-img-top"#}
+                    {#                         style="width: 10%; height: auto;">#}
+                    <img src="{{ path('app_glide_image', {'id': image.id}) }}" alt="{{ image.imageName }}"
+                         class="">
                 </td>
                 <td>{{ image.imageSize }}</td>
                 <td>{{ image.created ? image.created|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ image.updated ? image.updated|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ image.mineType }}</td>
+                <td>{{ image.originalName }}</td>
+                <td>{{ image.dimensions ? image.dimensions|json_encode : '' }}</td>
                 <td>
                     <a href="{{ path('app_image_show', {'id': image.id}) }}">show</a>
                     <a href="{{ path('app_image_edit', {'id': image.id}) }}">edit</a>
@@ -35,7 +45,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="9">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

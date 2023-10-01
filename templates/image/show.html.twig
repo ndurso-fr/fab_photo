@@ -27,6 +27,18 @@
                 <th>Updated</th>
                 <td>{{ image.updated ? image.updated|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
+            <tr>
+                <th>MineType</th>
+                <td>{{ image.mineType }}</td>
+            </tr>
+            <tr>
+                <th>OriginalName</th>
+                <td>{{ image.originalName }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions</th>
+                <td>{{ image.dimensions ? image.dimensions|json_encode : '' }}</td>
+            </tr>
         </tbody>
     </table>
 

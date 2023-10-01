@@ -22,7 +22,12 @@ class Image
     // mapping: 'upload_images' => value 'upload_images' because mappings name is 'upload_images'
     //                             into fab_photo/config/packages/vich_uploader.yaml
 
-    #[Vich\UploadableField(mapping: 'upload_images', fileNameProperty: 'imageName', size: 'imageSize')]
+    #[Vich\UploadableField(mapping: 'upload_images',// mapping => mandatory It's a link with the mapping system name declared into config/packages/vich_uploader.yaml
+        fileNameProperty: 'imageName',// fileNameProperty => mandatory but classe property name can named as we want
+        size: 'imageSize',
+        mimeType: 'mineType',
+        originalName:  'originalName',
+        dimensions: 'dimensions')]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
@@ -38,6 +43,64 @@ class Image
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Timestampable(on: 'update')]
     private ?\DateTimeInterface $updated = null;
+
+    #[ORM\Column(type: "string", length: 100)]
+    private ?string $mineType = null;
+
+    #[ORM\Column(type: "string", length: 250)]
+    private ?string $originalName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $dimensions = [];
+
+    /**
+     * @return array|null
+     */
+    public function getDimensions(): ?array
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * @param array|null $dimensions
+     */
+    public function setDimensions(?array $dimensions): void
+    {
+        $this->dimensions = $dimensions;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOriginalName(): ?string
+    {
+        return $this->originalName;
+    }
+
+    /**
+     * @param string|null $originalName
+     */
+    public function setOriginalName(?string $originalName): void
+    {
+        $this->originalName = $originalName;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getMineType(): ?string
+    {
+        return $this->mineType;
+    }
+
+    /**
+     * @param string|null $mineType
+     */
+    public function setMineType(?string $mineType): void
+    {
+        $this->mineType = $mineType;
+    }
 
     public function getId(): ?int
     {

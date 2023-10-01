@@ -50,6 +50,9 @@ class ImageControllerTest extends WebTestCase
             'image[imageSize]' => 'Testing',
             'image[created]' => 'Testing',
             'image[updated]' => 'Testing',
+            'image[mineType]' => 'Testing',
+            'image[originalName]' => 'Testing',
+            'image[dimensions]' => 'Testing',
         ]);
 
         self::assertResponseRedirects('/image/');
@@ -65,6 +68,9 @@ class ImageControllerTest extends WebTestCase
         $fixture->setImageSize('My Title');
         $fixture->setCreated('My Title');
         $fixture->setUpdated('My Title');
+        $fixture->setMineType('My Title');
+        $fixture->setOriginalName('My Title');
+        $fixture->setDimensions('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -85,6 +91,9 @@ class ImageControllerTest extends WebTestCase
         $fixture->setImageSize('My Title');
         $fixture->setCreated('My Title');
         $fixture->setUpdated('My Title');
+        $fixture->setMineType('My Title');
+        $fixture->setOriginalName('My Title');
+        $fixture->setDimensions('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -96,6 +105,9 @@ class ImageControllerTest extends WebTestCase
             'image[imageSize]' => 'Something New',
             'image[created]' => 'Something New',
             'image[updated]' => 'Something New',
+            'image[mineType]' => 'Something New',
+            'image[originalName]' => 'Something New',
+            'image[dimensions]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/image/');
@@ -106,6 +118,9 @@ class ImageControllerTest extends WebTestCase
         self::assertSame('Something New', $fixture[0]->getImageSize());
         self::assertSame('Something New', $fixture[0]->getCreated());
         self::assertSame('Something New', $fixture[0]->getUpdated());
+        self::assertSame('Something New', $fixture[0]->getMineType());
+        self::assertSame('Something New', $fixture[0]->getOriginalName());
+        self::assertSame('Something New', $fixture[0]->getDimensions());
     }
 
     public function testRemove(): void
@@ -119,6 +134,9 @@ class ImageControllerTest extends WebTestCase
         $fixture->setImageSize('My Title');
         $fixture->setCreated('My Title');
         $fixture->setUpdated('My Title');
+        $fixture->setMineType('My Title');
+        $fixture->setOriginalName('My Title');
+        $fixture->setDimensions('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();

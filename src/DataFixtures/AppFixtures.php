@@ -30,7 +30,8 @@ class AppFixtures extends Fixture
         // known users
         $this->createUser($manager, ['ROLE_USER', 'ROLE_ADMIN'], $password,
             'Nathalie', 'D\'urso',
-            'ndurso', 'nathaliedurso@gmx.fr');
+            'ndurso', 'nathaliedurso@gmx.fr',
+        true);
 
         // faker user
         for ($i = 0; $i < 10; $i++) {
@@ -58,6 +59,7 @@ class AppFixtures extends Fixture
                                 string $lastName=null,
                                 string $pseudo=null,
                                 string $email=null,
+                                bool $forceIsVerified=false
     ):void {
         $user = (new User())
             ->setFirstname($fistName ?? $this->faker->firstName())
@@ -66,6 +68,9 @@ class AppFixtures extends Fixture
             ->setEmail($email ?? $this->faker->email())
             ->setRoles($roles);
 
+        if ($forceIsVerified) {
+            $user->setIsVerified(true);
+        }
         $hashPassword = $this->passwordHasher->hashPassword(
             $user,
             $password

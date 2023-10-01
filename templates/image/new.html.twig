@@ -3,14 +3,9 @@
 {% block title %}New Image{% endblock %}
 
 {% block body %}
+    <h1>Create new Image</h1>
 
-    <div class="container mt-4">
-        <div class="pt-4 pb-4">
-            <a href="{{ path('app_image_index') }}" class="btn btn-secondary mr-2 float-end">back to list</a>
-            <h3>Upload a new image</h3>
-        </div>
-        {{ include('image/_form.html.twig') }}
+    {{ include('image/_form.html.twig') }}
 
-    </div>
-
+    <a href="{{ path('app_image_index') }}">back to list</a>
 {% endblock %}
