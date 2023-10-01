@@ -62,28 +62,37 @@ class ImageController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_image_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+//    #[Route('/{id}/edit', name: 'app_image_edit', methods: ['GET', 'POST'])]
+//    public function edit(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+//    {
+//        $form = $this->createForm(ImageType::class, $image);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $entityManager->flush();
+//
+//            return $this->redirectToRoute('app_image_index', [], Response::HTTP_SEE_OTHER);
+//        }
+//
+//        return $this->render('image/edit.html.twig', [
+//            'image' => $image,
+//            'form' => $form,
+//        ]);
+//    }
+
+    #[Route('/show-delete-form/{id}', name: 'show_delete_image')]
+    public function showDeleteForm(Image $image): Response
     {
-        $form = $this->createForm(ImageType::class, $image);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_image_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('image/edit.html.twig', [
-            'image' => $image,
-            'form' => $form,
-        ]);
+        return $this->render('image/_delete_form.html.twig', ['image' => $image]);
     }
 
     #[Route('/{id}', name: 'app_image_delete', methods: ['POST'])]
     public function delete(Request $request, Image $image, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$image->getId(), $request->request->get('_token'))) {
+            // delete image into storage dick
+            $this->photoStorage->delete($image->getImageName());
+            // delete image reference into BDD
             $entityManager->remove($image);
             $entityManager->flush();
         }
@@ -91,19 +100,21 @@ class ImageController extends AbstractController
         return $this->redirectToRoute('app_image_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/download/{path}/{name}/{size}', name: 'download_doc', methods: ['GET'])]
-    public function download(string $path, string $name, string $size): StreamedResponse
+    #[Route('/download/{fileName}/{name}/{size}', name: 'download_image', methods: ['GET'])]
+    public function download(string $fileName, string $name, string $size): StreamedResponse
     {
-
+    /*
+     * <a href="{{ path('download_image', { 'fileName' : image.imageName, 'name' : image.originalName, 'size' : image.imageSize}) }}">download</a>
+     */
         try {
-            $stream = $this->photoStorage->readStream($path);
+            $stream = $this->photoStorage->readStream($fileName);
 
             return new StreamedResponse(function () use ($stream) {
                 fpassthru($stream);
                 exit();
             }, 200, [
                 'Content-Transfer-Encoding', 'binary',
-                'Content-Type' => $this->photoStorage->mimeType($path),
+                'Content-Type' => $this->photoStorage->mimeType($fileName),
                 'Content-Disposition' => 'attachment; filename='.$name,
                 'Content-Length' => $size,
             ]);
