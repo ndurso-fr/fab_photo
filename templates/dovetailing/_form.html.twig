@@ -1,4 +1,25 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+{#    {{ form_row(form.name) }}#}
+{#    {{ form_row(form.title) }}#}
+{#    {{ form_row(form.description) }}#}
+{#    <div>#}
+{#        <ul class="images"#}
+{#            data-index="{{ form.images|length > 0 ? form.images|last.vars.name + 1 : 0 }}"#}
+{#            data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">#}
+{#            {% if (form.images|length > 0) %}#}
+{#                {% for image in form.images %}#}
+{#                    <li>{{ form_row(image.imageName) }}</li>#}
+{#                {% endfor %}#}
+{#            {% else %}#}
+{#                {{ form_row(form.images) }}#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#        <button type="button"#}
+{#                id="btn_add"#}
+{#                class="add_item_link"#}
+{#                data-collection-holder-class="images">Add an image#}
+{#        </button>#}
+{#    </div>#}
     <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

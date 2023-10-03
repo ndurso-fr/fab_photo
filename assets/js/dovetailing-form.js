@@ -1,0 +1,52 @@
+// const onLoad = () => {
+    //console.log("coucou");
+    //addCollectionManagement('images', 'btn_add');
+// };
+
+// window.addEventListener('load', onLoad );
+
+const addFormToCollection = (e) => {
+
+    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+    const item = document.createElement('li');
+
+    item.innerHTML = collectionHolder
+        .dataset
+        .prototype
+        .replace(
+            /__name__/g,
+            collectionHolder.dataset.index
+        );
+
+    collectionHolder.appendChild(item);
+    collectionHolder.dataset.index++;
+
+    addFormDeleteLink(item);
+};
+
+const addFormDeleteLink = (item) => {
+    const removeFormButton = document.createElement('button');
+    removeFormButton.innerText = 'Delete this ' + item.parentElement.getAttribute('btnLabel');
+
+    item.append(removeFormButton);
+
+    removeFormButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        // remove the li for the status form
+        item.remove();
+    });
+}
+const addCollectionManagement = (ulClass, btnId) => {
+    console.log("addCollectionManagement");
+    const btn = document.getElementById(btnId);
+    console.log(btn);
+    btn.addEventListener("click", addFormToCollection);
+    document
+        .querySelectorAll('ul.' + ulClass + ' li')
+        .forEach((item) => {
+            addFormDeleteLink(item)
+        });
+}
+
+//addCollectionManagement('images', 'btn_add');

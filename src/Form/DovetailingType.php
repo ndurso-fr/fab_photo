@@ -20,7 +20,10 @@ class DovetailingType extends AbstractType
             ->add('name')
             ->add('title')
             ->add('description')
-            ->add('images', ImageType::class, [
+            ->add('images', EntityType::class, [
+                'class' => Image::class,
+                'choice_label' => 'imageName',
+                'multiple' => true,
             ])
 //            ->add('images', CollectionType::class, [
 //                'entry_type'=> ImageType::class,
