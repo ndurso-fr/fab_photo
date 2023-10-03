@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Image;
-use App\Form\ImageType;
+use App\Form\ImageUploaderType;
 use App\Repository\ImageRepository;
 use App\Service\ImageService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +40,7 @@ class ImageController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $image = new Image();
-        $form = $this->createForm(ImageType::class, $image);
+        $form = $this->createForm(ImageUploaderType::class, $image);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,7 +77,7 @@ class ImageController extends AbstractController
 //    #[Route('/{id}/edit', name: 'app_image_edit', methods: ['GET', 'POST'])]
 //    public function edit(Request $request, Image $image, EntityManagerInterface $entityManager): Response
 //    {
-//        $form = $this->createForm(ImageType::class, $image);
+//        $form = $this->createForm(ImageUploaderType::class, $image);
 //        $form->handleRequest($request);
 //
 //        if ($form->isSubmitted() && $form->isValid()) {

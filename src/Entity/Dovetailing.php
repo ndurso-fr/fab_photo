@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DovetailingRepository::class)]
 class Dovetailing
@@ -20,13 +21,15 @@ class Dovetailing
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex('/^\w+/')]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: AccessImage::class, inversedBy: 'dovetailings')]
+    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'dovetailings', cascade: ["persist"])]
     private Collection $images;
+
 
     public function __construct()
     {
@@ -75,14 +78,14 @@ class Dovetailing
     }
 
     /**
-     * @return Collection<int, AccessImage>
+     * @return Collection<int, Image>
      */
     public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(AccessImage $image): static
+    public function addImage(Image $image): static
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
@@ -91,10 +94,11 @@ class Dovetailing
         return $this;
     }
 
-    public function removeImage(AccessImage $image): static
+    public function removeImage(Image $image): static
     {
         $this->images->removeElement($image);
 
         return $this;
     }
+
 }

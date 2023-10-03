@@ -49,7 +49,7 @@ class ImageService
         }
     }
 
-    // when controller give to a the view a glide url
+    // when controller give to a the view a secure url
     public function encryptUrlsWithGlide(array $glideParameters): array
     {
         $images = [];

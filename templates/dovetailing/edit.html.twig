@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Dovetailing{% endblock %}
+
+{% block body %}
+    <h1>Edit Dovetailing</h1>
+
+    {{ include('dovetailing/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_dovetailing_index') }}">back to list</a>
+
+    {{ include('dovetailing/_delete_form.html.twig') }}
+{% endblock %}

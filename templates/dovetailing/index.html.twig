@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dovetailing index{% endblock %}
+
+{% block body %}
+    <h1>Dovetailing index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dovetailing in dovetailings %}
+            <tr>
+                <td>{{ dovetailing.id }}</td>
+                <td>{{ dovetailing.name }}</td>
+                <td>{{ dovetailing.title }}</td>
+                <td>{{ dovetailing.description }}</td>
+                <td>
+                    <a href="{{ path('app_dovetailing_show', {'id': dovetailing.id}) }}">show</a>
+                    <a href="{{ path('app_dovetailing_edit', {'id': dovetailing.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dovetailing_new') }}">Create new</a>
+{% endblock %}
