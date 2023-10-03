@@ -1,0 +1,30 @@
+<div class="mt-4 m-4 border border-1 bg-dark text-white">
+    <h3 class="text-center">{{ dovetailing.name }}</h3>
+    <div class="wrapper m-2">
+        <nav class="lil-nav ps-2 pt-2">
+            {% for image in dovetailing.images  %}
+                <a href="{{ path('app_image_show', {id: image.id}) }}">
+                    <img src="{{ image_glide_helper(image.imageName, {'w': 50, 'h': 50}) }}"
+                     class="lil-nav__img" alt="{{ image.imageName }}">
+                </a>
+            {% endfor %}
+        </nav>
+        <div class="gallery py-2">
+            {% for image in dovetailing.images  %}
+                <img src="{{ image_glide_helper(image.imageName, {'w': 400, 'h': 400}) }}"
+                     class="gallery__img" alt="{{ image.imageName }}">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mx-4 mt-4">
+        <h5 class="">{{ dovetailing.title }}</h5>
+        <p class="">
+            {{ dovetailing.description | nl2br }}
+        </p>
+    </div>
+    <div class="text-center pb-2">
+        <a href="{{ path('app_dovetailing_show', {id: dovetailing.id}) }}" class="btn btn-primary">
+            Gestion de cet assemblage
+        </a>
+    </div>
+</div>

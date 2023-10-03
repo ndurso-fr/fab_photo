@@ -3,11 +3,13 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-    <div class="jumbotron text-center">
-        <h1>Bienvenue sur la homepage</h1>
+    <div class="jumbotron mt-2">
+        <h3> Mes Assemblages</h3>
     </div>
     <div class="container">
-
+        {% for dovetailing in dovetailings %}
+            {% include 'dovetailing/_dovetailing.html.twig' %}
+        {% endfor %}
     </div>
 
 {% endblock %}

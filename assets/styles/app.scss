@@ -1,0 +1,42 @@
+@import "~bootstrap/scss/bootstrap";
+body {
+    //background-color: red;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.wrapper {
+  background-color: #a7acb1;
+  overflow: hidden;
+  height: 200px;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  grid-gap: 10px;
+}
+
+.gallery {
+  overflow: scroll;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.gallery__img {
+  scroll-snap-align: start;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.lil-nav {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+
+.lil-nav__img {
+  object-fit: cover;
+  max-height: 100%;
+  margin-bottom: 5px;
+}
