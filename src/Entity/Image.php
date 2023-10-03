@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ImageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation\Timestampable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,6 +55,13 @@ class Image
     #[ORM\Column(nullable: true)]
     private ?array $dimensions = [];
 
+    //private ?string $glideUrl = null;
+
+    public function __construct()
+    {
+
+    }
+
     /**
      * @return array|null
      */
@@ -84,7 +93,6 @@ class Image
     {
         $this->originalName = $originalName;
     }
-
 
     /**
      * @return string|null
@@ -175,4 +183,17 @@ class Image
     {
         return $this->imageSize;
     }
+
+    public function getGlideUrl(): ?string
+    {
+        return $this->glideUrl;
+    }
+
+    public function setGlideUrl(?string $glideUrl): static
+    {
+        $this->glideUrl = $glideUrl;
+
+        return $this;
+    }
+
 }

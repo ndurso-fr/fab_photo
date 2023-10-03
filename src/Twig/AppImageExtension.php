@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Twig;
-use App\Entity\Image;
+use App\Service\ImageService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class AppImageExtension extends AbstractExtension
 {
-
+    public function __construct(private readonly ImageService $imageService)
+    {
+    }
     public function getFunctions(): array
     {
         return [
@@ -15,8 +17,8 @@ class AppImageExtension extends AbstractExtension
         ];
     }
 
-    public function imageGlideHelper(Image $image, array $params=[]): string
+    public function imageGlideHelper(string $imageName, array $params=[]): string
     {
-        return "";
+        return $this->imageService->secureRouteForViewUrl($imageName, $params);
     }
 }

@@ -12,7 +12,9 @@
             <h2>Image : {{ image.originalName }}</h2>
 
             <div class="table border border-light border-4 rounded mt-4 text-center p-4">
-                <img src="{{ path('app_get_image', {'id': image.id}) }}" alt="{{ image.imageName }}">
+{#                <img src="{{ path('access_glide_secure_image', {'id': image.id}) }}" alt="{{ image.imageName }}">#}
+{#                <img src="{{ image.glideUrl }}" alt="{{ image.imageName }}">#}
+                  <img src="{{ image_glide_helper(image.imageName) }}" alt="{{ image.imageName }}">
             </div>
             <div class="float-end">
                 {{ include('image/_delete_form.html.twig') }}

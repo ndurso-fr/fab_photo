@@ -38,8 +38,8 @@
                                // il fau donc un controller qui demande l'image à flysytem et qui la donne
                             <img src="{{ path('app_get_image', {'id': image.id}) }}" alt="{{ image.imageName }}" class="card-img-top"#}
                             {#                         style="width: 10%; height: auto;">#}
-                            <img src="{{ path('app_glide_image', {'id': image.id}) }}" alt="{{ image.imageName }}"
-                                 class=""> {# la config de glide dans service.yaml demande à flysytem l'url #}
+{#                            <img src="{{ image.glideUrl }}" alt="{{ image.imageName }}"> #}{# la config de glide dans service.yaml demande à flysytem l'url #}
+                            <img src="{{ image_glide_helper(image.imageName, {'w': 50, 'h': 50}) }}" alt="{{ image.imageName }}"> {# la config de glide dans service.yaml demande à flysytem l'url #}
                         </td>
                         <td>{{ image.imageSize }}</td>
                         <td>{{ image.created ? image.created|date('Y-m-d H:i:s') : '' }}</td>
