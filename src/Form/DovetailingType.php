@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Dovetailing;
 use App\Entity\Image;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -20,18 +21,26 @@ class DovetailingType extends AbstractType
             ->add('name')
             ->add('title')
             ->add('description')
-            ->add('images', EntityType::class, [
-                'class' => Image::class,
-                'choice_label' => 'imageName',
-                'multiple' => true,
-            ])
-//            ->add('images', CollectionType::class, [
-//                'entry_type'=> ImageType::class,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,// utiliser add and remove
-//                'entry_options' => ['label' => false],
+//            ->add('images', EntityType::class, [
+//                'class' => Image::class,
+//                'choice_label' => 'imageName',
+//                'multiple' => true,
 //            ])
+            ->add('images', CollectionType::class, [
+                'entry_type'=> EntityType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,// utiliser add and remove
+                'entry_options' => [
+                    'class' => Image::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('r')
+                            ->orderBy('r.imageName', 'ASC');
+                    },
+                    'choice_label' => 'imageName',
+                    'choice_value' => 'id'
+                ],
+            ])
         ;
 
         if ($doveling && $doveling->getId() !== null) {

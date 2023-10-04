@@ -27,7 +27,11 @@ const addFormToCollection = (e) => {
 
 const addFormDeleteLink = (item) => {
     const removeFormButton = document.createElement('button');
-    removeFormButton.innerText = 'Delete this ' + item.parentElement.getAttribute('btnLabel');
+
+    const btn_label = item.parentElement.getAttribute('data-btn-delete-label');
+    //const btn_label = item.parentElement.dataset.btnDeleteLabel;
+
+    removeFormButton.innerText = btn_label ? 'Delete this ' + btn_label : 'Delete';
 
     item.append(removeFormButton);
 
@@ -49,4 +53,4 @@ const addCollectionManagement = (ulClass, btnId) => {
         });
 }
 
-//addCollectionManagement('images', 'btn_add');
+addCollectionManagement('images', 'btn_add');
