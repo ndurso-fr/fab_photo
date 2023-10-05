@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('comment-form') }}
+{% endblock %}
+
+{% block title %}New Comment{% endblock %}
+
+{% block body %}
+    <div class="container mx-4 my-4">
+        <div>
+            <h3>{{ dovetailing.name }}</h3>
+        </div>
+        <div>
+            <form id="form-comment" name="form_comment" method="post" action={{ path('app_comment_add') }}>
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Identifiant (email) :</label>
+                        <input type="email" id="email" name="email" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">New comment</label>
+                        <textarea type="text" class="form-control" id="comment" name="comment"
+                                  placeholder="Enter your comment"></textarea>
+                    </div>
+                    <input hidden type="text" id="dovetailing-id" name="dovetailing_id" value="{{ dovetailing.id }}"/>
+                    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

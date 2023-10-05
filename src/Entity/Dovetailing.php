@@ -30,10 +30,14 @@ class Dovetailing
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'dovetailings', cascade: ["persist"])]
     private Collection $images;
 
+    #[ORM\OneToMany(mappedBy: 'dovetailing', targetEntity: Comment::class)]
+    private Collection $comments;
+
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +101,36 @@ class Dovetailing
     public function removeImage(Image $image): static
     {
         $this->images->removeElement($image);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setDovetailing($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentComment ($comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getDovetailing() === $this) {
+                $comment->setDovetailing(null);
+            }
+        }
 
         return $this;
     }

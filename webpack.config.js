@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('dovetailing-form', './assets/js/dovetailing-form.js')
+    .addEntry('comment-form', './assets/js/comment-form.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

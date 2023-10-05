@@ -53,4 +53,4 @@ const addCollectionManagement = (ulClass, btnId) => {
         });
 }
 
-addCollectionManagement('images', 'btn_add');
+//addCollectionManagement('images', 'btn_add');

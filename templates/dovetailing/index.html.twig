@@ -31,6 +31,7 @@
                     <td>
                         <a href="{{ path('app_dovetailing_show', {'id': dovetailing.id}) }}">show</a>
                         <a href="{{ path('app_dovetailing_edit', {'id': dovetailing.id}) }}">edit</a>
+                        <a href="{{ path('app_comment_new', {'dovetailing': dovetailing.id}) }}">comment</a>
                         {{ include('dovetailing/_delete_form.html.twig') }}
                     </td>
                 </tr>

@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dovetailing-form') }}
+{% endblock %}
+
 {% block title %}Edit Dovetailing{% endblock %}
 
 {% block body %}

@@ -29,6 +29,16 @@
                     <th>Description</th>
                     <td>{{ dovetailing.description }}</td>
                 </tr>
+                <tr>
+                    <th>Commentaires</th>
+                    <td>
+                        <ul>
+                            {% for comment in dovetailing.comments %}
+                                <li>{{ comment.text }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
